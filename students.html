@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ps" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>د محصلینو مدیریت</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f1f4f8;
+        }
+
+        header {
+            background: #1677ff;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1100px;
+            margin: 25px auto;
+        }
+
+        .box {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        .form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 8px;
+            background: #1677ff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #095dcc;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+        }
+
+        .edit-btn {
+            background: #f0ad00;
+        }
+
+        .back-btn {
+            background: #555;
+            margin-bottom: 20px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background: #1677ff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f7f7f7;
+        }
+
+        .actions button {
+            margin: 3px;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+        <h1>👨‍🎓 د محصلینو مدیریت سیستم</h1>
+    </header>
+
+    <div class="container">
+
+        <button class="back-btn" onclick="goBack()">
+            ← Dashboard ته ستنېدل
+        </button>
+
+
+        <div class="box">
+
+            <h2>➕ نوی محصل ثبت کړئ</h2>
+
+            <div class="form">
+
+                <input
+                    type="text"
+                    id="name"
+                    placeholder="د محصل نوم"
+                >
+
+                <input
+                    type="text"
+                    id="father"
+                    placeholder="د پلار نوم"
+                >
+
+                <input
+                    type="text"
+                    id="phone"
+                    placeholder="د تلیفون شمېره"
+                >
+
+                <input
+                    type="text"
+                    id="course"
+                    placeholder="د کورس نوم"
+                >
+
+                <input
+                    type="text"
+                    id="address"
+                    placeholder="پته"
+                >
+
+            </div>
+
+            <br>
+
+            <button onclick="addStudent()">
+                💾 محصل ثبت کړه
+            </button>
+
+            <p id="message"></p>
+
+        </div>
+
+
+        <div class="box">
+
+            <h2>📋 د محصلینو لست</h2>
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>شمېره</th>
+                            <th>نوم</th>
+                            <th>د پلار نوم</th>
+                            <th>تلیفون</th>
+                            <th>کورس</th>
+                            <th>پته</th>
+                            <th>عملیات</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="studentTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        let students = JSON.parse(
+            localStorage.getItem("students")
+        ) || [];
+
+
+        function addStudent() {
+
+            let name = document.getElementById("name").value;
+            let father = document.getElementById("father").value;
+            let phone = document.getElementById("phone").value;
+            let course = document.getElementById("course").value;
+            let address = document.getElementById("address").value;
+
+
+            if (
+                name === "" ||
+                father === "" ||
+                phone === "" ||
+                course === ""
+            ) {
+
+                showMessage(
+                    "مهرباني وکړئ اړین معلومات بشپړ کړئ ❌",
+                    "red"
+                );
+
+                return;
+            }
+
+
+            let student = {
+
+                name: name,
+                father: father,
+                phone: phone,
+                course: course,
+                address: address
+
+            };
+
+
+            students.push(student);
+
+
+            localStorage.setItem(
+                "students",
+                JSON.stringify(students)
+            );
+
+
+            clearForm();
+
+            showMessage(
+                "محصل په بریالیتوب سره ثبت شو ✅",
+                "green"
+            );
+
+
+            displayStudents();
+
+        }
+
+
+        function displayStudents() {
+
+            let table =
+                document.getElementById("studentTable");
+
+
+            table.innerHTML = "";
+
+
+            students.forEach(function(student, index) {
+
+                table.innerHTML += `
+
+                    <tr>
+
+                        <td>${index + 1}</td>
+
+                        <td>${student.name}</td>
+
+                        <td>${student.father}</td>
+
+                        <td>${student.phone}</td>
+
+                        <td>${student.course}</td>
+
+                        <td>${student.address}</td>
+
+                        <td class="actions">
+
+                            <button
+                                class="edit-btn"
+                                onclick="editStudent(${index})"
+                            >
+                                ✏️ بدلول
+                            </button>
+
+                            <button
+                                class="delete-btn"
+                                onclick="deleteStudent(${index})"
+                            >
+                                🗑️ حذف
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            });
+
+        }
+
+
+        function deleteStudent(index) {
+
+            let confirmDelete =
+                confirm("ایا غواړئ دا محصل حذف کړئ؟");
+
+
+            if (confirmDelete) {
+
+                students.splice(index, 1);
+
+
+                localStorage.setItem(
+                    "students",
+                    JSON.stringify(students)
+                );
+
+
+                displayStudents();
+
+            }
+
+        }
+
+
+        function editStudent(index) {
+
+            let student = students[index];
+
+
+            document.getElementById("name").value =
+                student.name;
+
+            document.getElementById("father").value =
+                student.father;
+
+            document.getElementById("phone").value =
+                student.phone;
+
+            document.getElementById("course").value =
+                student.course;
+
+            document.getElementById("address").value =
+                student.address;
+
+
+            students.splice(index, 1);
+
+
+            localStorage.setItem(
+                "students",
+                JSON.stringify(students)
+            );
+
+
+            displayStudents();
+
+
+            showMessage(
+                "معلومات د بدلولو لپاره پورته راوړل شول ✏️",
+                "orange"
+            );
+
+        }
+
+
+        function clearForm() {
+
+            document.getElementById("name").value = "";
+            document.getElementById("father").value = "";
+            document.getElementById("phone").value = "";
+            document.getElementById("course").value = "";
+            document.getElementById("address").value = "";
+
+        }
+
+
+        function showMessage(message, color) {
+
+            let messageBox =
+                document.getElementById("message");
+
+            messageBox.innerHTML = message;
+
+            messageBox.style.color = color;
+
+        }
+
+
+        function goBack() {
+
+            window.location.href = "dashboard.html";
+
+        }
+
+
+        displayStudents();
+
+    </script>
+
+</body>
+
+</html>

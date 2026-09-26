@@ -1,28 +1,141 @@
 <!DOCTYPE html>
 <html lang="ps" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Institute Database</title>
+
+    <title>د انستیتیوت د محصلینو سیستم</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f4f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .login-box {
+            background: white;
+            width: 320px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            text-align: right;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #1677ff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #095dcc;
+        }
+
+        #message {
+            margin-top: 18px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
 
-    <h1>د انستیتیوت د محصلینو سیستم</h1>
+    <div class="login-box">
 
-    <h2>Login</h2>
+        <h1>د انستیتیوت د محصلینو سیستم</h1>
 
-    <label>د کارن نوم:</label>
-    <input type="text" id="username">
+        <h2>Login</h2>
 
-    <br><br>
+        <label for="username">د کارن نوم:</label>
 
-    <label>پټ نوم:</label>
-    <input type="password" id="password">
+        <input
+            type="text"
+            id="username"
+            placeholder="کارن نوم ولیکئ"
+        >
 
-    <br><br>
+        <label for="password">پټ نوم:</label>
 
-    <button>Login</button>
+        <input
+            type="password"
+            id="password"
+            placeholder="پټ نوم ولیکئ"
+        >
+
+        <button onclick="login()">Login</button>
+
+        <p id="message"></p>
+
+    </div>
+
+    <script>
+
+        function login() {
+
+            let username =
+                document.getElementById("username").value.trim();
+
+            let password =
+                document.getElementById("password").value;
+
+            if (username === "admin" && password === "12345") {
+
+                document.getElementById("message").innerHTML =
+                    "Login بریالی شو ✅";
+
+                document.getElementById("message").style.color = "green";
+
+                alert("Login بریالی شو ✅");
+
+            } else {
+
+                document.getElementById("message").innerHTML =
+                    "کارن نوم یا پټ نوم غلط دی ❌";
+
+                document.getElementById("message").style.color = "red";
+            }
+        }
+
+    </script>
 
 </body>
+
 </html>
